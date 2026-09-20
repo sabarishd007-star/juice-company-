@@ -532,12 +532,14 @@
             width: 85%;
             height: 85%;
             cursor: pointer;
+            position: relative;
+            z-index: 2;
         }
 
         .floating-element {
             position: absolute;
             pointer-events: none;
-            z-index: 2;
+            z-index: 3;
             font-size: 2.5rem;
             filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.4));
         }
@@ -1003,10 +1005,14 @@
             const dashboardView = document.getElementById('dashboard-view');
 
             if (asset && asset.type === "video" && asset.bgVideoUrl) {
-                if (videoElement.getAttribute('src') !== asset.bgVideoUrl) {
+                const currentSrc = videoElement.currentSrc || videoElement.src || '';
+                const cleanTarget = asset.bgVideoUrl.replace(/^\.\//, '');
+                if (!currentSrc.includes(cleanTarget)) {
                     videoElement.src = asset.bgVideoUrl;
-                    videoElement.play().catch(e => console.log("Autoplay handled/muted:", e));
+                    videoElement.load();
                 }
+                videoElement.muted = true;
+                videoElement.play().catch(e => console.log("Autoplay handled/muted:", e));
                 videoContainer.classList.add('active');
                 dashboardView.style.background = asset.bgGradient || '#0284c7';
             } else {
