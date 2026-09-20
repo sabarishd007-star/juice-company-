@@ -7,7 +7,7 @@
  *   2. Push the change to GitHub — Vercel will auto-redeploy the frontend.
  */
 
-const RENDER_BACKEND_URL = '';  // ← Paste your Render URL here after deploying
+const RENDER_BACKEND_URL = 'https://juice-company.onrender.com';
 
 // Auto-detect: use Render backend in production, localhost in development
 const BACKEND_BASE =
