@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: juice-company-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true     # Render auto-generates a secure random value
+      - key: CLIENT_ORIGIN
+        sync: false             # You will paste your Vercel URL here after deploy

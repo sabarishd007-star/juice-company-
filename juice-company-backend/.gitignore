@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Environment secrets — never commit this!
+.env
+
+# SQLite database file (Render uses ephemeral storage — data resets on redeploy)
+# Keep seed.js to repopulate on startup instead
+database.sqlite
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
+*.log

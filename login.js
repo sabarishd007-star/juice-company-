@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   passwordInput?.addEventListener('input', () => clearFieldError(passwordInput, 'password-error'));
 
   // 3. Form Submission Hook — wired to JWT backend
-  const API_BASE = 'http://localhost:5000/api/v1';
+  // API_BASE is provided by config.js (loaded before this script in login.html)
 
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
