@@ -570,6 +570,34 @@
             gap: 1.5rem;
         }
 
+        /* Video / Sequence Background */
+        #video-bg-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #video-bg-container.active {
+            opacity: 1;
+        }
+
+        #product-bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-vignette {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.35) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.75) 100%);
+            pointer-events: none;
+        }
+
         /* ----------------------------------
            10. RESPONSIVE BREAKPOINTS
         ----------------------------------- */
@@ -792,6 +820,15 @@
 
         <div class="dashboard-layout">
             <div class="stage-3d">
+                <!-- Dynamic Product Video / Splash Background -->
+                <div id="video-bg-container">
+                    <video id="product-bg-video" autoplay loop muted playsinline>
+                        <source src="" type="video/mp4">
+                    </video>
+                    <!-- Dark vignette gradient for text readability and cinematic depth -->
+                    <div class="video-vignette"></div>
+                </div>
+
                 <div class="floating-element item-1" id="float-1">❄️</div>
                 <div class="floating-element item-2" id="float-2">⚡</div>
                 <div class="floating-element item-3" id="float-3">🧊</div>
@@ -892,6 +929,34 @@
             { id: 11, name: "Monster Ultra", tag: "11 / 11 Product", desc: "Zero sugar, light crisp citrus taste, and unleashed performance energy.", vol: "500ml", cal: "0 kcal", type: "Taurine + B-Vitamins", accent: "#00f3ff", bgInner: "#2e3b4e", bgMid: "#121824", bgOuter: "#05080f", icons: ["❄️", "⚡", "🧊", "💎"] }
         ];
 
+        // Dynamic Product Assets Configuration (Video & 3D Model mapping)
+        const productAssets = {
+            "Coca-Cola": {
+                type: "video",
+                bgVideoUrl: "assets/coca-cola-splash-loop.mp4",
+                bgGradient: "linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0c4a6e 100%)",
+                modelUrl: "assets/coca_cola.glb",
+                labelTextureUrl: "assets/classic_coke_texture.png",
+                canColor: "#F40000"
+            },
+            "Diet Coke": {
+                type: "color",
+                bgVideoUrl: "",
+                bgGradient: "linear-gradient(135deg, #475569 0%, #1e293b 50%, #0f172a 100%)",
+                modelUrl: "assets/diet_coke.glb",
+                labelTextureUrl: "assets/diet_coke_texture.png",
+                canColor: "#e6e6e6"
+            },
+            "Monster Ultra": {
+                type: "color",
+                bgVideoUrl: "",
+                bgGradient: "linear-gradient(135deg, #064e3b 0%, #022c22 50%, #0f172a 100%)",
+                modelUrl: "https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/deit_soda2.glb",
+                labelTextureUrl: "",
+                canColor: "#2E8B57"
+            }
+        };
+
         let currentIndex = 10;
 
         // View Router
@@ -930,13 +995,36 @@
             document.getElementById('spec-type').textContent = prod.type;
 
             document.documentElement.style.setProperty('--primary-cyan', prod.accent);
-            document.getElementById('dashboard-view').style.background = `radial-gradient(circle at center, ${prod.bgInner} 0%, ${prod.bgMid} 50%, ${prod.bgOuter} 100%)`;
+
+            // Dynamic Video & Product Theme Transition
+            const asset = productAssets[prod.name];
+            const videoContainer = document.getElementById('video-bg-container');
+            const videoElement = document.getElementById('product-bg-video');
+            const dashboardView = document.getElementById('dashboard-view');
+
+            if (asset && asset.type === "video" && asset.bgVideoUrl) {
+                if (videoElement.getAttribute('src') !== asset.bgVideoUrl) {
+                    videoElement.src = asset.bgVideoUrl;
+                    videoElement.play().catch(e => console.log("Autoplay handled/muted:", e));
+                }
+                videoContainer.classList.add('active');
+                dashboardView.style.background = asset.bgGradient || '#0284c7';
+            } else {
+                videoContainer.classList.remove('active');
+                if (videoElement) {
+                    videoElement.pause();
+                }
+                dashboardView.style.background = `radial-gradient(circle at center, ${prod.bgInner} 0%, ${prod.bgMid} 50%, ${prod.bgOuter} 100%)`;
+            }
 
             for (let i = 0; i < 4; i++) {
                 document.getElementById(`float-${i+1}`).textContent = prod.icons[i];
             }
 
             const model = document.getElementById('main-model');
+            if (asset && asset.modelUrl && model.getAttribute('src') !== asset.modelUrl) {
+                model.src = asset.modelUrl;
+            }
             gsap.to(model, { rotation: "+=360", duration: 0.8, ease: "power2.inOut" });
             gsap.to('.floating-element', { scale: 1.4, duration: 0.2, yoyo: true, repeat: 1 });
             
