@@ -594,10 +594,7 @@
         }
 
         .video-vignette {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(2, 132, 199, 0.35) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.75) 100%);
-            pointer-events: none;
+            display: none;
         }
 
         /* ----------------------------------
@@ -1003,6 +1000,9 @@
             const videoContainer = document.getElementById('video-bg-container');
             const videoElement = document.getElementById('product-bg-video');
             const dashboardView = document.getElementById('dashboard-view');
+            const model = document.getElementById('main-model');
+            const floatingElements = document.querySelectorAll('.floating-element');
+            const customizeBtn = document.querySelector('button[onclick="toggleCustomizer()"]');
 
             if (asset && asset.type === "video" && asset.bgVideoUrl) {
                 const currentSrc = videoElement.currentSrc || videoElement.src || '';
@@ -1015,24 +1015,35 @@
                 videoElement.play().catch(e => console.log("Autoplay handled/muted:", e));
                 videoContainer.classList.add('active');
                 dashboardView.style.background = asset.bgGradient || '#0284c7';
+
+                // Only video should play: hide 3D can, floating particles, and customize button
+                if (model) model.style.display = 'none';
+                floatingElements.forEach(el => el.style.display = 'none');
+                if (customizeBtn) customizeBtn.style.display = 'none';
             } else {
                 videoContainer.classList.remove('active');
                 if (videoElement) {
                     videoElement.pause();
                 }
                 dashboardView.style.background = `radial-gradient(circle at center, ${prod.bgInner} 0%, ${prod.bgMid} 50%, ${prod.bgOuter} 100%)`;
+
+                // Restore 3D can, floating particles, and customize button for standard products
+                if (model) model.style.display = 'block';
+                floatingElements.forEach(el => el.style.display = 'block');
+                if (customizeBtn) customizeBtn.style.display = 'inline-block';
             }
 
             for (let i = 0; i < 4; i++) {
                 document.getElementById(`float-${i+1}`).textContent = prod.icons[i];
             }
 
-            const model = document.getElementById('main-model');
-            if (asset && asset.modelUrl && model.getAttribute('src') !== asset.modelUrl) {
+            if (asset && asset.modelUrl && model && model.getAttribute('src') !== asset.modelUrl) {
                 model.src = asset.modelUrl;
             }
-            gsap.to(model, { rotation: "+=360", duration: 0.8, ease: "power2.inOut" });
-            gsap.to('.floating-element', { scale: 1.4, duration: 0.2, yoyo: true, repeat: 1 });
+            if (model && model.style.display !== 'none') {
+                gsap.to(model, { rotation: "+=360", duration: 0.8, ease: "power2.inOut" });
+                gsap.to('.floating-element', { scale: 1.4, duration: 0.2, yoyo: true, repeat: 1 });
+            }
             
             resetCustomizer();
         }
