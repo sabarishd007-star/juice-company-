@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroDrink 3D | Next-Gen Beverage Experience</title>
+    
+    <!-- Typography: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Inline FOUC Prevention — shared nexus_theme key across all pages -->
+    <script>
+      (function(){
+        const t = localStorage.getItem('nexus_theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+
+    <!-- GSAP & Google Model Viewer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        /* ----------------------------------
+           1. DESIGN SYSTEM & CSS VARIABLES
+        ----------------------------------- */
+        :root {
+            /* Palette */
+            --bg-dark: #07090e;
+            --bg-card: rgba(15, 23, 42, 0.65);
+            --bg-card-hover: rgba(30, 41, 59, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(0, 243, 255, 0.3);
+            
+            --primary-cyan: #00f3ff;
+            --primary-glow: rgba(0, 243, 255, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            /* Dynamic Dashboard Variables */
+            --bg-inner: #2e3b4e;
+            --bg-mid: #121824;
+            --bg-outer: #05080f;
+            --accent-glow: #00f3ff;
+
+            /* Spacing & Radii */
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+
+            /* Typography Scaling */
+            --font-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+            --font-h2: clamp(2rem, 3.5vw + 1rem, 3rem);
+            --font-body: clamp(0.95rem, 1vw + 0.5rem, 1.1rem);
+            
+            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ----------------------------------
+           2. GLOBAL RESET & BASE STYLES
+        ----------------------------------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-cyan), #7000ff);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.1s linear;
+        }
+
+        /* Background Grid & Radial Glows */
+        .bg-grid-pattern {
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            right: -100px;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+        }
+
+        /* Views System */
+        .page-view {
+            position: relative;
+            width: 100vw;
+            min-height: 100vh;
+            display: none;
+            opacity: 0;
+            z-index: 1;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .page-view.active {
+            display: block;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* ----------------------------------
+           3. REUSABLE UI COMPONENTS
+        ----------------------------------- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: var(--transition-smooth);
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(0, 243, 255, 0.12);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--primary-cyan);
+            color: #05080f;
+            font-weight: 700;
+            padding: 0.9rem 2rem;
+            border-radius: var(--radius-full);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 0.9rem 2rem;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-glass);
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-full);
+            background: rgba(0, 243, 255, 0.08);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            color: var(--primary-cyan);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ----------------------------------
+           4. STEP 1: LANDING PAGE NAVBAR
+        ----------------------------------- */
+        header.navbar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.25rem 0;
+            transition: var(--transition-smooth);
+        }
+
+        header.navbar.scrolled {
+            background: rgba(7, 9, 14, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 0.85rem 0;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary-cyan);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-cyan);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ----------------------------------
+           5. HERO SECTION
+        ----------------------------------- */
+        .hero {
+            padding: 6rem 0 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: var(--font-hero);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -1.5px;
+            margin: 1.2rem 0;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: var(--font-body);
+            color: var(--text-muted);
+            margin-bottom: 2.2rem;
+            max-width: 520px;
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        /* 3D Hero Mockup Container */
+        .hero-visual {
+            position: relative;
+            height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-mockup-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-lg);
+        }
+
+        .hero-floating-badge {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            padding: 1rem 1.25rem;
+            z-index: 10;
+        }
+
+        /* ----------------------------------
+           6. FEATURES SECTION
+        ----------------------------------- */
+        .features {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-header h2 {
+            font-size: var(--font-h2);
+            font-weight: 800;
+            margin: 0.8rem 0;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: var(--font-body);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--primary-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        /* ----------------------------------
+           7. STATS & FOOTER
+        ----------------------------------- */
+        .stats-banner {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-glass);
+            border-bottom: 1px solid var(--border-glass);
+            margin: 4rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item strong {
+            display: block;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary-cyan);
+        }
+
+        .stat-item span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-glass);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .footer-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ----------------------------------
+           8. STEP 2: LOGIN VIEW
+        ----------------------------------- */
+        #login-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1.25rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            color: #fff;
+            outline: none;
+            transition: var(--transition-smooth);
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* ----------------------------------
+           9. STEP 3: DASHBOARD VIEW
+        ----------------------------------- */
+        #dashboard-view {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--bg-inner) 0%, var(--bg-mid) 50%, var(--bg-outer) 100%);
+            transition: background 0.8s ease-in-out;
+        }
+
+        .dashboard-layout {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .stage-3d {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        model-viewer {
+            width: 85%;
+            height: 85%;
+            cursor: pointer;
+        }
+
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            z-index: 2;
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.4));
+        }
+
+        .item-1 { top: 14%; left: 18%; }
+        .item-2 { bottom: 20%; left: 24%; }
+        .item-3 { top: 20%; right: 32%; }
+        .item-4 { bottom: 18%; right: 26%; }
+
+        .dashboard-sidebar {
+            width: 420px;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 0;
+            border-right: none;
+            border-top: none;
+            border-bottom: none;
+            z-index: 10;
+        }
+
+        .dashboard-nav {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* ----------------------------------
+           10. RESPONSIVE BREAKPOINTS
+        ----------------------------------- */
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content p {
+                margin: 0 auto 2rem;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                height: 380px;
+            }
+
+            .dashboard-layout {
+                flex-direction: column;
+            }
+
+            .dashboard-sidebar {
+                width: 100%;
+                height: 45vh;
+                padding: 1.5rem;
+            }
+
+            .stage-3d {
+                height: 55vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress"></div>
+
+    <!-- Background Decoration Grid -->
+    <div class="bg-grid-pattern"></div>
+    <div class="bg-ambient-glow"></div>
+
+    <!-- ==========================================
+         STEP 1: PRODUCTION-LEVEL LANDING PAGE
+    =========================================== -->
+    <section id="landing-view" class="page-view active">
+        
+        <!-- Sticky Navigation Bar -->
+        <header class="navbar" id="navbar">
+            <div class="container nav-wrapper">
+                <a href="#" class="logo">AERO<span>DRINK</span> 3D</a>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#showcase">Showcase</a></li>
+                    <li><a href="#stats">Metrics</a></li>
+                </ul>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button class="btn-secondary" onclick="navigateTo('login-view')">Sign In</button>
+                    <button class="btn-primary" onclick="navigateTo('login-view')">Launch App</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <span class="badge">✨ Real-time WebGL Engine</span>
+                    <h1>Immersive <span class="text-gradient">3D Beverage</span> Digital Experience</h1>
+                    <p>High-performance anti-gravity canvas, dynamic ambient lighting, and interactive 3D customization engineered for modern product showcases.</p>
+                    <div class="hero-cta">
+                        <button class="btn-primary" onclick="navigateTo('login-view')">Get Started Free →</button>
+                        <button class="btn-secondary" onclick="navigateTo('login-view')">Explore 11 Brands</button>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="glass-card hero-mockup-card">
+                        <model-viewer id="hero-model" 
+                            src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/deit_soda2.glb" 
+                            camera-controls 
+                            auto-rotate 
+                            rotation-per-second="20deg"
+                            shadow-intensity="1"
+                            exposure="1.2"
+                            style="width: 100%; height: 100%;">
+                        </model-viewer>
+                        <div class="glass-card hero-floating-badge">
+                            <span style="color: var(--primary-cyan); font-weight: 700;">60 FPS Render</span>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">GSAP Anti-Gravity Active</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <span class="badge">Capabilities</span>
+                    <h2>Engineered for Visual Impact</h2>
+                    <p>Designed with cutting-edge web technologies to deliver smooth, photorealistic interactive product presentations.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon">🧊</div>
+                        <h3>Anti-Gravity Particle Engine</h3>
+                        <p>GSAP-driven physics simulation that smoothly calculates levitation trajectories in real-time.</p>
+                    </div>
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3>Dynamic Gradient Palette</h3>
+                        <p>Automatic background shade transitions that sync perfectly with individual brand colorways.</p>
+                    </div>
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>WebGL Performance</h3>
+                        <p>Hardware-accelerated 3D model rendering optimized for seamless performance on desktop and mobile.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-banner" id="stats">
+            <div class="container stats-grid">
+                <div class="stat-item">
+                    <strong>11+</strong>
+                    <span>Iconic Brands</span>
+                </div>
+                <div class="stat-item">
+                    <strong>60 FPS</strong>
+                    <span>Smooth Motion</span>
+                </div>
+                <div class="stat-item">
+                    <strong>100%</strong>
+                    <span>Responsive Layout</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container footer-wrapper">
+                <div>© 2026 AeroDrink 3D Inc. All rights reserved.</div>
+                <div style="display: flex; gap: 1.5rem;">
+                    <a href="#" style="color: var(--text-dim); text-decoration: none;">Privacy</a>
+                    <a href="#" style="color: var(--text-dim); text-decoration: none;">Terms</a>
+                    <a href="#" style="color: var(--text-dim); text-decoration: none;">Docs</a>
+                </div>
+            </div>
+        </footer>
+
+    </section>
+
+    <!-- ==========================================
+         STEP 2: AUTHENTICATION LOGIN VIEW
+    =========================================== -->
+    <section id="login-view" class="page-view">
+        <div class="glass-card login-card">
+            <a href="#" class="logo" style="justify-content: center; margin-bottom: 1rem;">AERO<span>DRINK</span></a>
+            <h2 style="font-size: 1.8rem; margin-bottom: 0.4rem;">Sign In</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Access your 3D product showcase workspace</p>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" value="admin@aerodrink.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" value="••••••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Enter Workspace →</button>
+            </form>
+
+            <button class="btn-secondary" style="width: 100%; margin-top: 1rem; border: none; background: transparent;" onclick="navigateTo('landing-view')">
+                ← Return to Landing Page
+            </button>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         STEP 3: DASHBOARD INTERACTIVE VIEW
+    =========================================== -->
+    <section id="dashboard-view" class="page-view">
+        <div class="dashboard-nav">
+            <a href="#" class="logo">AERO<span>DRINK</span></a>
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <a href="dashboard.html" class="btn-secondary" style="padding: 0.5rem 1.2rem; font-size: 0.8rem; text-decoration:none;">📊 Analytics</a>
+                <!-- Theme toggle for 3D showcase -->
+                <button id="showcase-theme-toggle" aria-label="Toggle Theme" title="Toggle Light/Dark" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:inherit;padding:0.45rem 0.6rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;">
+                  <svg class="stl-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                  <svg class="stl-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <button class="btn-secondary" style="padding: 0.5rem 1.2rem; font-size: 0.8rem;" onclick="navigateTo('landing-view')">Exit Workspace</button>
+            </div>
+        </div>
+
+        <div class="dashboard-layout">
+            <div class="stage-3d">
+                <div class="floating-element item-1" id="float-1">❄️</div>
+                <div class="floating-element item-2" id="float-2">⚡</div>
+                <div class="floating-element item-3" id="float-3">🧊</div>
+                <div class="floating-element item-4" id="float-4">💎</div>
+
+                <model-viewer id="main-model" 
+                    src="https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/deit_soda2.glb" 
+                    camera-controls 
+                    auto-rotate 
+                    rotation-per-second="30deg"
+                    shadow-intensity="1"
+                    exposure="1.4">
+                </model-viewer>
+            </div>
+
+            <div class="glass-card dashboard-sidebar" style="position: relative; overflow: hidden;">
+                
+                <!-- Mode A: Product Info -->
+                <div id="sidebar-info" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span class="badge" id="prod-number">11 / 11 Product</span>
+                            <button class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="toggleCustomizer()">⚙️ Customize</button>
+                        </div>
+                        <h1 style="font-size: 2.8rem; margin: 0.6rem 0;" id="prod-name">Monster Ultra</h1>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;" id="prod-desc">Zero sugar, light crisp citrus taste, and unleashed energy. Engineered for peak athletic performance and maximum focus.</p>
+
+                        <div style="display: flex; gap: 1.5rem; margin: 2rem 0;">
+                            <div>
+                                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Volume</span>
+                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-vol">500ml</strong>
+                            </div>
+                            <div>
+                                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Calories</span>
+                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-cal">0 kcal</strong>
+                            </div>
+                            <div>
+                                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Formula</span>
+                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-type">Taurine + B-Vitamins</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn-secondary" onclick="navigateProduct(-1)">← Prev</button>
+                        <button class="btn-primary" style="flex: 1;" onclick="navigateProduct(1)">Next Beverage →</button>
+                    </div>
+                </div>
+
+                <!-- Mode B: Customizer -->
+                <div id="sidebar-customizer" style="display: none; flex-direction: column; height: 100%; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h2 style="font-size: 1.5rem; margin: 0;">Model Customizer</h2>
+                            <button class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="toggleCustomizer()">✕ Close</button>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Base Color</label>
+                            <input type="color" id="cust-color" value="#ffffff" style="width: 100%; height: 44px; border: none; border-radius: var(--radius-sm); cursor: pointer; background: transparent; padding: 0;">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                Metalness <span id="val-metal" style="color: var(--primary-cyan);">0.00</span>
+                            </label>
+                            <input type="range" id="cust-metal" min="0" max="1" step="0.01" value="0" style="width: 100%; cursor: pointer;">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                Roughness <span id="val-rough" style="color: var(--primary-cyan);">0.50</span>
+                            </label>
+                            <input type="range" id="cust-rough" min="0" max="1" step="0.01" value="0.5" style="width: 100%; cursor: pointer;">
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary" style="width: 100%;" onclick="resetCustomizer()">Reset to Default</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Scripting -->
+    <script>
+        // Data Preservation for all 11 Beverage Products
+        const products = [
+            { id: 1, name: "Coca-Cola", tag: "01 / 11 Product", desc: "The original classic cola taste enjoyed worldwide.", vol: "330ml", cal: "139 kcal", type: "Classic Soda", accent: "#ff0000", bgInner: "#d00000", bgMid: "#500000", bgOuter: "#100000", icons: ["🥤", "🧊", "🔴", "✨"] },
+            { id: 2, name: "Diet Coke", tag: "02 / 11 Product", desc: "Crisp, refreshing taste with zero sugar and zero calories.", vol: "330ml", cal: "0 kcal", type: "Zero Sugar", accent: "#e6e6e6", bgInner: "#8a8a8a", bgMid: "#333333", bgOuter: "#0f0f0f", icons: ["⚪", "🧊", "⚡", "✨"] },
+            { id: 3, name: "Sprite", tag: "03 / 11 Product", desc: "Crisp, clean lemon-lime taste that instantly quenches thirst.", vol: "330ml", cal: "140 kcal", type: "Lemon-Lime", accent: "#00ff66", bgInner: "#00a843", bgMid: "#004d1f", bgOuter: "#001a0a", icons: ["🍋", "🧊", "🍃", "💧"] },
+            { id: 4, name: "Fanta Orange", tag: "04 / 11 Product", desc: "Bright, bubbly, and bursting with vibrant citrus orange flavor.", vol: "330ml", cal: "160 kcal", type: "Orange Soda", accent: "#ff7700", bgInner: "#e65c00", bgMid: "#662900", bgOuter: "#1a0a00", icons: ["🍊", "🧊", "💥", "✨"] },
+            { id: 5, name: "Slice Mango", tag: "05 / 11 Product", desc: "Rich, luscious mango drink crafted from thick juicy mango pulp.", vol: "250ml", cal: "120 kcal", type: "Mango Drink", accent: "#ffbb00", bgInner: "#cc9600", bgMid: "#553e00", bgOuter: "#1a1300", icons: ["🥭", "🧊", "🍃", "💧"] },
+            { id: 6, name: "Frooti", tag: "06 / 11 Product", desc: "India’s favorite mango drink offering a fun, juicy mango punch.", vol: "200ml", cal: "110 kcal", type: "Mango Nectar", accent: "#ffea00", bgInner: "#ffd700", bgMid: "#cc8800", bgOuter: "#1e1300", icons: ["🥭", "🧊", "🍃", "🥭"] },
+            { id: 7, name: "Appy Fizz", tag: "07 / 11 Product", desc: "Bubbly, sparkling real apple juice drink with a crisp bite.", vol: "250ml", cal: "120 kcal", type: "Sparkling Apple", accent: "#ff3366", bgInner: "#990026", bgMid: "#4d0013", bgOuter: "#110004", icons: ["🍎", "🧊", "🍏", "✨"] },
+            { id: 8, name: "Tropicana", tag: "08 / 11 Product", desc: "100% pure orange juice crafted with no added sugar or preservatives.", vol: "250ml", cal: "110 kcal", type: "100% Juice", accent: "#33cc55", bgInner: "#ff5500", bgMid: "#992200", bgOuter: "#1c0700", icons: ["🍊", "🧊", "🍃", "💦"] },
+            { id: 9, name: "Réal Mixed Fruit", tag: "09 / 11 Product", desc: "Delicious blend of 9 rich fruits providing whole family nutrition.", vol: "200ml", cal: "115 kcal", type: "9 Fruits Blend", accent: "#f77f00", bgInner: "#d62828", bgMid: "#6a040f", bgOuter: "#1e0005", icons: ["🍓", "🧊", "🍊", "🍎"] },
+            { id: 10, name: "Sting Energy", tag: "10 / 11 Product", desc: "Electrifying burst of energy, caffeine, and taurine in berry flavor.", vol: "250ml", cal: "140 kcal", type: "Energy Drink", accent: "#00ffff", bgInner: "#ff0055", bgMid: "#880022", bgOuter: "#1a0005", icons: ["⚡", "🧊", "💥", "🍓"] },
+            { id: 11, name: "Monster Ultra", tag: "11 / 11 Product", desc: "Zero sugar, light crisp citrus taste, and unleashed performance energy.", vol: "500ml", cal: "0 kcal", type: "Taurine + B-Vitamins", accent: "#00f3ff", bgInner: "#2e3b4e", bgMid: "#121824", bgOuter: "#05080f", icons: ["❄️", "⚡", "🧊", "💎"] }
+        ];
+
+        let currentIndex = 10;
+
+        // View Router
+        function navigateTo(viewId) {
+            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+            const target = document.getElementById(viewId);
+            target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (viewId === 'dashboard-view') {
+                updateDashboardProduct();
+                initFloatingAnimations();
+            }
+        }
+
+        // Login Handler
+        function handleLogin(event) {
+            event.preventDefault();
+            navigateTo('dashboard-view');
+        }
+
+        // Navigation Controller
+        function navigateProduct(direction) {
+            currentIndex = (currentIndex + direction + products.length) % products.length;
+            updateDashboardProduct();
+        }
+
+        function updateDashboardProduct() {
+            const prod = products[currentIndex];
+
+            document.getElementById('prod-number').textContent = prod.tag;
+            document.getElementById('prod-name').textContent = prod.name;
+            document.getElementById('prod-desc').textContent = prod.desc;
+            document.getElementById('spec-vol').textContent = prod.vol;
+            document.getElementById('spec-cal').textContent = prod.cal;
+            document.getElementById('spec-type').textContent = prod.type;
+
+            document.documentElement.style.setProperty('--primary-cyan', prod.accent);
+            document.getElementById('dashboard-view').style.background = `radial-gradient(circle at center, ${prod.bgInner} 0%, ${prod.bgMid} 50%, ${prod.bgOuter} 100%)`;
+
+            for (let i = 0; i < 4; i++) {
+                document.getElementById(`float-${i+1}`).textContent = prod.icons[i];
+            }
+
+            const model = document.getElementById('main-model');
+            gsap.to(model, { rotation: "+=360", duration: 0.8, ease: "power2.inOut" });
+            gsap.to('.floating-element', { scale: 1.4, duration: 0.2, yoyo: true, repeat: 1 });
+            
+            resetCustomizer();
+        }
+
+        // Ambient Floating Animation Loops
+        function initFloatingAnimations() {
+            gsap.to('#float-1', { y: -25, rotation: 20, duration: 2.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            gsap.to('#float-2', { y: 20, rotation: -15, duration: 2.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            gsap.to('#float-3', { y: -30, rotation: 25, duration: 2.4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            gsap.to('#float-4', { y: 18, rotation: -10, duration: 3.0, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        }
+
+        // Navbar Scroll Observer & Progress Bar
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 40) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+        });
+
+        // 3D Customizer Logic
+        function rgbToHex(r, g, b) {
+            const toHex = c => Math.round(c * 255).toString(16).padStart(2, '0');
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? [
+                parseInt(result[1], 16) / 255,
+                parseInt(result[2], 16) / 255,
+                parseInt(result[3], 16) / 255,
+                1.0
+            ] : [1, 1, 1, 1];
+        }
+
+        function toggleCustomizer() {
+            const info = document.getElementById('sidebar-info');
+            const cust = document.getElementById('sidebar-customizer');
+            if (info.style.display === 'none') {
+                info.style.display = 'flex';
+                cust.style.display = 'none';
+            } else {
+                info.style.display = 'none';
+                cust.style.display = 'flex';
+                
+                // Read current material states
+                const model = document.getElementById('main-model');
+                if (model.model && model.model.materials && model.model.materials[0]) {
+                    const pbr = model.model.materials[0].pbrMetallicRoughness;
+                    
+                    document.getElementById('cust-metal').value = pbr.metallicFactor;
+                    document.getElementById('val-metal').innerText = pbr.metallicFactor.toFixed(2);
+                    
+                    document.getElementById('cust-rough').value = pbr.roughnessFactor;
+                    document.getElementById('val-rough').innerText = pbr.roughnessFactor.toFixed(2);
+                    
+                    const rgba = pbr.baseColorFactor;
+                    if (rgba) {
+                        document.getElementById('cust-color').value = rgbToHex(rgba[0], rgba[1], rgba[2]);
+                    }
+                }
+            }
+        }
+
+        document.getElementById('cust-color').addEventListener('input', (e) => {
+            const rgba = hexToRgb(e.target.value);
+            const model = document.getElementById('main-model');
+            if (model.model && model.model.materials[0]) {
+                model.model.materials[0].pbrMetallicRoughness.setBaseColorFactor(rgba);
+            }
+        });
+
+        document.getElementById('cust-metal').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            document.getElementById('val-metal').innerText = val.toFixed(2);
+            const model = document.getElementById('main-model');
+            if (model.model && model.model.materials[0]) {
+                model.model.materials[0].pbrMetallicRoughness.setMetallicFactor(val);
+            }
+        });
+
+        document.getElementById('cust-rough').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            document.getElementById('val-rough').innerText = val.toFixed(2);
+            const model = document.getElementById('main-model');
+            if (model.model && model.model.materials[0]) {
+                model.model.materials[0].pbrMetallicRoughness.setRoughnessFactor(val);
+            }
+        });
+
+        function resetCustomizer() {
+            const model = document.getElementById('main-model');
+            if (model.model && model.model.materials[0]) {
+                const pbr = model.model.materials[0].pbrMetallicRoughness;
+                pbr.setBaseColorFactor([1, 1, 1, 1]);
+                pbr.setMetallicFactor(0.0);
+                pbr.setRoughnessFactor(0.5);
+            }
+            
+            document.getElementById('cust-color').value = '#ffffff';
+            document.getElementById('cust-metal').value = 0.0;
+            document.getElementById('val-metal').innerText = '0.00';
+            document.getElementById('cust-rough').value = 0.5;
+            document.getElementById('val-rough').innerText = '0.50';
+        }
+
+        // Auto-navigate to dashboard if hash is #dashboard-view
+        window.addEventListener('DOMContentLoaded', () => {
+            // Read optional ?product=N deep-link param
+            const urlParams = new URLSearchParams(window.location.search);
+            const productParam = urlParams.get('product');
+            if (productParam !== null) {
+                const idx = parseInt(productParam, 10);
+                if (idx >= 0 && idx < products.length) {
+                    currentIndex = idx;
+                }
+            }
+            if (window.location.hash === '#dashboard-view') {
+                navigateTo('dashboard-view');
+            }
+
+            // Theme toggle for showcase page
+            const showcaseThemeToggle = document.getElementById('showcase-theme-toggle');
+            const stlSun = showcaseThemeToggle?.querySelector('.stl-sun');
+            const stlMoon = showcaseThemeToggle?.querySelector('.stl-moon');
+
+            const syncShowcaseIcons = () => {
+                const theme = document.documentElement.getAttribute('data-theme');
+                if (stlSun && stlMoon) {
+                    stlSun.style.display = theme === 'dark' ? 'block' : 'none';
+                    stlMoon.style.display = theme === 'dark' ? 'none' : 'block';
+                }
+            };
+            syncShowcaseIcons();
+
+            showcaseThemeToggle?.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('nexus_theme', next);
+                syncShowcaseIcons();
+            });
+        });
+    </script>
+</body>
+</html>

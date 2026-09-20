@@ -1,0 +1,14 @@
+{
+  "name": "juice-company-enterprise",
+  "version": "1.0.0",
+  "description": "Full-stack Juice Manufacturing Enterprise Dashboard and 3D Showcase",
+  "scripts": {
+    "seed": "npm --prefix juice-company-backend run seed",
+    "server": "npm --prefix juice-company-backend run start",
+    "dev": "concurrently \"npm run server\" \"http-server . -p 3000 --cors\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juice Co. Enterprise Dashboard</title>
+  
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('nexus_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-secondary: #121824;
+      --bg-tertiary: #1a2234;
+      --bg-card: rgba(18, 24, 36, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      
+      --accent-primary: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --accent-orange: #f59e0b;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-red: #ef4444;
+      
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.8);
+      --border-color: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 0, 0, 0.18);
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      
+      --accent-glow: rgba(16, 185, 129, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px 24px 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .brand-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-list {
+      list-style: none;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .nav-item a:hover, .nav-item.active a {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active a {
+      border-left: 3px solid var(--accent-primary);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .top-header {
+      height: 72px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background-color: rgba(10, 13, 20, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    [data-theme="light"] .top-header {
+      background-color: rgba(248, 250, 252, 0.8);
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-primary);
+      box-shadow: 0 0 10px var(--accent-primary);
+    }
+
+    .status-dot.offline {
+      background-color: var(--accent-orange);
+      box-shadow: 0 0 10px var(--accent-orange);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .icon-btn:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+
+    .content-area {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+
+    .metric-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .metric-title {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: -0.03em;
+    }
+
+    .metric-subtitle {
+      font-size: 0.8rem;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      background: var(--bg-tertiary);
+      padding: 4px;
+      border-radius: var(--radius-md);
+    }
+
+    .pill-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-btn.active {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 280px;
+      position: relative;
+    }
+
+    svg.chart-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .chart-line {
+      fill: none;
+      stroke: var(--accent-primary);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: d 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .chart-area {
+      fill: url(#chartGradient);
+      transition: d 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .data-table th {
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-primary);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-orange);
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* ---- Search & Toolbar ---- */
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 160px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px 14px 8px 36px;
+      color: var(--text-primary);
+      font-size: 0.88rem;
+      font-family: var(--font-sans);
+      outline: none;
+      transition: var(--transition);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .filter-select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      color: var(--text-primary);
+      font-size: 0.88rem;
+      font-family: var(--font-sans);
+      outline: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-select:focus { border-color: var(--accent-primary); }
+
+    .btn-export {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px 14px;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .btn-export:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* ---- Toast Notifications ---- */
+    #toast-container {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      min-width: 280px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      font-size: 0.88rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: toastIn 0.3s cubic-bezier(0.4,0,0.2,1) forwards;
+      pointer-events: auto;
+    }
+
+    .toast.toast-success { border-left: 3px solid var(--accent-primary); }
+    .toast.toast-warning { border-left: 3px solid var(--accent-orange); }
+    .toast.toast-error   { border-left: 3px solid var(--accent-red); }
+
+    .toast-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .toast-title { font-weight: 700; margin-bottom: 2px; }
+    .toast-msg { color: var(--text-secondary); font-size: 0.82rem; }
+
+    @keyframes toastIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">JC</div>
+      <div class="brand-text">Juice Co. Enterprise</div>
+    </div>
+    
+    <ul class="nav-list">
+      <li class="nav-item active"><a href="dashboard.html"><span>📊</span> Dashboard</a></li>
+      <li class="nav-item"><a href="index.html"><span>🥫</span> 3D Showcase</a></li>
+      <li class="nav-item"><a href="login.html"><span>🔑</span> Sign Out</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div style="font-size: 0.75rem; color: var(--text-muted);">
+        System Engine v2.4.1<br>
+        <span id="sidebarUserEmail" style="color: var(--accent-primary);">Not signed in</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="top-header">
+      <div class="status-badge">
+        <span class="status-dot" id="backendDot"></span>
+        <span id="backendStatusText">Connecting http://localhost:5000...</span>
+      </div>
+
+      <div class="header-actions">
+        <div id="userChip" style="display: flex; align-items: center; gap: 8px; background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 5px 12px 5px 8px; border-radius: 20px; font-size: 0.82rem;">
+          <div style="width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: #000;" id="userAvatar">JC</div>
+          <span id="userGreeting" style="color: var(--text-secondary); font-weight: 500;">Guest</span>
+        </div>
+        <button class="icon-btn" id="themeToggleBtn" title="Toggle Theme">☀️</button>
+      </div>
+    </header>
+
+    <main class="content-area">
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Requests / Sec</div>
+          <div class="metric-value" id="valRps">--</div>
+          <div class="metric-subtitle">⚡ Real-time Telemetry Stream</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Avg Latency</div>
+          <div class="metric-value" id="valLatency">-- ms</div>
+          <div class="metric-subtitle">🎯 Targeted SLA &lt; 20ms</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Active Connections</div>
+          <div class="metric-value" id="valConn">--</div>
+          <div class="metric-subtitle">📡 Global Node Distribution</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">System CPU</div>
+          <div class="metric-value" id="valCpu">-- %</div>
+          <div class="metric-subtitle">💻 Auto-scaling Pool</div>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Production Inventory & Demand</div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="filter-pills">
+                <button class="pill-btn active" onclick="switchRange('24h', this)">24h</button>
+                <button class="pill-btn" onclick="switchRange('7d', this)">7d</button>
+                <button class="pill-btn" onclick="switchRange('30d', this)">30d</button>
+              </div>
+              <button class="btn-primary" onclick="openModal('productModal')">+ Add Product</button>
+            </div>
+          </div>
+          
+          <div class="chart-container">
+            <svg class="chart-svg" viewBox="0 0 500 150">
+              <defs>
+                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path class="chart-area" id="chartArea" d="M 0 150 L 0 100 L 250 80 L 500 120 L 500 150 Z" />
+              <path class="chart-line" id="chartLine" d="M 0 100 L 250 80 L 500 120" />
+            </svg>
+          </div>
+
+          <!-- Search + Export Toolbar -->
+          <div class="table-toolbar">
+            <input
+              id="inventorySearch"
+              class="search-input"
+              type="text"
+              placeholder="Search products..."
+              oninput="filterInventory(this.value)"
+            >
+            <select id="inventoryStatusFilter" class="filter-select" onchange="filterInventory(document.getElementById('inventorySearch').value)">
+              <option value="">All Status</option>
+              <option value="In Stock">In Stock</option>
+              <option value="Low Stock">Low Stock</option>
+            </select>
+            <button class="btn-export" onclick="exportInventoryCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product ID</th>
+                <th>Juice Name</th>
+                <th>Stock Level</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted);">Loading inventory...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">API Endpoints</div>
+            <button class="btn-primary" onclick="openModal('endpointModal')">+ Deploy</button>
+          </div>
+
+          <!-- Search + Filter + Export Toolbar -->
+          <div class="table-toolbar">
+            <input
+              id="endpointSearch"
+              class="search-input"
+              type="text"
+              placeholder="Search endpoints..."
+              oninput="filterEndpoints(this.value)"
+            >
+            <select id="endpointStatusFilter" class="filter-select" onchange="filterEndpoints(document.getElementById('endpointSearch').value)">
+              <option value="">All</option>
+              <option value="Active">Active</option>
+              <option value="Syncing">Syncing</option>
+            </select>
+            <button class="btn-export" onclick="exportEndpointsCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Path</th>
+                <th>Latency</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="endpointTableBody">
+              <tr>
+                <td colspan="3" style="text-align: center; color: var(--text-muted);">Loading endpoints...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script>
+    const API_BASE = 'http://localhost:5000/api/v1';
+
+    // Theme Toggle Logic
+    const themeBtn = document.getElementById('themeToggleBtn');
+    function updateThemeIcon(theme) {
+      themeBtn.innerText = theme === 'dark' ? '☀️' : '🌙';
+    }
+    
+    updateThemeIcon(document.documentElement.getAttribute('data-theme'));
+
+    themeBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('nexus_theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+
+    // Chart Datasets
+    const chartData = {
+      '24h': {
+        line: 'M 0 100 Q 125 40 250 80 T 500 30',
+        area: 'M 0 100 Q 125 40 250 80 T 500 30 L 500 150 L 0 150 Z'
+      },
+      '7d': {
+        line: 'M 0 120 Q 125 90 250 40 T 500 70',
+        area: 'M 0 120 Q 125 90 250 40 T 500 70 L 500 150 L 0 150 Z'
+      },
+      '30d': {
+        line: 'M 0 60 Q 125 110 250 30 T 500 90',
+        area: 'M 0 60 Q 125 110 250 30 T 500 90 L 500 150 L 0 150 Z'
+      }
+    };
+
+    function switchRange(range, btn) {
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      document.getElementById('chartLine').setAttribute('d', chartData[range].line);
+      document.getElementById('chartArea').setAttribute('d', chartData[range].area);
+    }
+
+    // Auth Token Helper
+    function getAuthHeaders() {
+      const token = localStorage.getItem('nexus_auth_token');
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+      };
+    }
+
+    // ── WebSocket Telemetry Client ──────────────────────────
+    const WS_URL = 'ws://localhost:5000/ws';
+    let wsReconnectDelay = 1000;
+    let wsMock = null;
+
+    function updateKPIs(data) {
+      document.getElementById('valRps').innerText     = data.reqPerSec;
+      document.getElementById('valLatency').innerText = data.avgLatencyMs + ' ms';
+      document.getElementById('valConn').innerText    = data.activeConnections;
+      document.getElementById('valCpu').innerText     = data.cpuUsagePercent + ' %';
+
+      // Pulse the status dot on each frame
+      const dot = document.getElementById('backendDot');
+      dot.style.transform = 'scale(1.4)';
+      setTimeout(() => { dot.style.transform = 'scale(1)'; }, 200);
+    }
+
+    function setupWS() {
+      const statusDot  = document.getElementById('backendDot');
+      const statusText = document.getElementById('backendStatusText');
+
+      let ws;
+      try {
+        ws = new WebSocket(WS_URL);
+      } catch (err) {
+        fallbackMockTelemetry();
+        return;
+      }
+
+      ws.onopen = () => {
+        wsReconnectDelay = 1000; // reset backoff
+        statusDot.classList.remove('offline');
+        statusText.innerText = '🔌 WebSocket: Connected (ws://localhost:5000/ws)';
+        if (wsMock) { clearInterval(wsMock); wsMock = null; }
+        showToast('success', '🔌 WS Connected', 'Real-time telemetry stream established.');
+      };
+
+      ws.onmessage = (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+
+          if (msg.type === 'telemetry') {
+            updateKPIs(msg.data);
+          }
+
+          if (msg.type === 'alert') {
+            const { type, title, message } = msg.alert;
+            showToast(type, title, message);
+          }
+
+          if (msg.type === 'connected') {
+            console.log('[WS]', msg.message);
+          }
+        } catch (_) {}
+      };
+
+      ws.onerror = () => {
+        statusDot.classList.add('offline');
+        statusText.innerText = '⚠️ WebSocket: Error — retrying...';
+      };
+
+      ws.onclose = () => {
+        statusDot.classList.add('offline');
+        statusText.innerText = `🔴 WebSocket: Offline — reconnecting in ${wsReconnectDelay / 1000}s`;
+
+        if (!wsMock) fallbackMockTelemetry();
+
+        setTimeout(() => {
+          wsReconnectDelay = Math.min(wsReconnectDelay * 2, 30000); // exponential backoff cap 30 s
+          setupWS();
+        }, wsReconnectDelay);
+      };
+    }
+
+    function fallbackMockTelemetry() {
+      const statusDot  = document.getElementById('backendDot');
+      const statusText = document.getElementById('backendStatusText');
+      statusDot.classList.add('offline');
+      statusText.innerText = '🟡 Backend: Offline — Mock Fallback Active';
+
+      if (wsMock) return; // don't double-start
+      wsMock = setInterval(() => {
+        updateKPIs({
+          reqPerSec:        Math.floor(800 + Math.random() * 400),
+          avgLatencyMs:     parseFloat((12 + Math.random() * 8).toFixed(1)),
+          activeConnections:Math.floor(1200 + Math.random() * 150),
+          cpuUsagePercent:  parseFloat((25 + Math.random() * 15).toFixed(1)),
+        });
+      }, 2000);
+    }
+
+    // Global data stores for live filtering
+    let inventoryData = [];
+    let endpointsData = [];
+
+    function renderInventoryRows(items) {
+      const tbody = document.getElementById('inventoryTableBody');
+      if (!items.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No matching products found.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = items.map(item => `
+        <tr>
+          <td style="font-family: var(--font-mono); font-weight: 600;">${item.id}</td>
+          <td>${item.name}</td>
+          <td>${item.stock} / ${item.capacity}</td>
+          <td><span class="badge ${item.status === 'In Stock' ? 'badge-success' : 'badge-warning'}">${item.status}</span></td>
+          <td><button class="pill-btn" onclick="restockItem('${item.id}')">Restock</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function filterInventory(query) {
+      const status = document.getElementById('inventoryStatusFilter').value;
+      const q = query.toLowerCase();
+      const filtered = inventoryData.filter(item => {
+        const matchQ = !q || item.name.toLowerCase().includes(q) || String(item.id).toLowerCase().includes(q);
+        const matchStatus = !status || item.status === status;
+        return matchQ && matchStatus;
+      });
+      renderInventoryRows(filtered);
+    }
+
+    function exportInventoryCSV() {
+      const status = document.getElementById('inventoryStatusFilter').value;
+      const q = document.getElementById('inventorySearch').value.toLowerCase();
+      const rows = inventoryData.filter(item => {
+        const matchQ = !q || item.name.toLowerCase().includes(q) || String(item.id).toLowerCase().includes(q);
+        const matchStatus = !status || item.status === status;
+        return matchQ && matchStatus;
+      });
+      const header = 'Product ID,Juice Name,Stock,Capacity,Status';
+      const lines = rows.map(i => `${i.id},${i.name},${i.stock},${i.capacity},${i.status}`);
+      downloadCSV([header, ...lines].join('\n'), 'inventory_export.csv');
+      showToast('success', '✅ CSV Exported', `${rows.length} inventory rows downloaded.`);
+    }
+
+    function renderEndpointRows(items) {
+      const tbody = document.getElementById('endpointTableBody');
+      if (!items.length) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No matching endpoints found.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = items.map(ep => `
+        <tr>
+          <td style="font-family: var(--font-mono); font-size: 0.8rem;">${ep.path}</td>
+          <td>${ep.latency} ms</td>
+          <td><span class="badge ${ep.status === 'Active' ? 'badge-success' : 'badge-warning'}">${ep.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function filterEndpoints(query) {
+      const status = document.getElementById('endpointStatusFilter').value;
+      const q = query.toLowerCase();
+      const filtered = endpointsData.filter(ep => {
+        const matchQ = !q || ep.path.toLowerCase().includes(q);
+        const matchStatus = !status || ep.status === status;
+        return matchQ && matchStatus;
+      });
+      renderEndpointRows(filtered);
+    }
+
+    function exportEndpointsCSV() {
+      const status = document.getElementById('endpointStatusFilter').value;
+      const q = document.getElementById('endpointSearch').value.toLowerCase();
+      const rows = endpointsData.filter(ep => {
+        const matchQ = !q || ep.path.toLowerCase().includes(q);
+        const matchStatus = !status || ep.status === status;
+        return matchQ && matchStatus;
+      });
+      const header = 'Path,Latency (ms),Status';
+      const lines = rows.map(ep => `${ep.path},${ep.latency},${ep.status}`);
+      downloadCSV([header, ...lines].join('\n'), 'endpoints_export.csv');
+      showToast('success', '✅ CSV Exported', `${rows.length} endpoint rows downloaded.`);
+    }
+
+    function downloadCSV(content, filename) {
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Toast notification system
+    function showToast(type, title, message, duration = 4000) {
+      const container = document.getElementById('toast-container');
+      const icons = { success: '✅', warning: '⚠️', error: '❌' };
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+        <div>
+          <div class="toast-title">${title}</div>
+          <div class="toast-msg">${message}</div>
+        </div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.4s, transform 0.4s';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(12px)';
+        setTimeout(() => toast.remove(), 400);
+      }, duration);
+    }
+
+    // REST API Loaders
+    async function loadInventory() {
+      const tbody = document.getElementById('inventoryTableBody');
+      try {
+        const res = await fetch(`${API_BASE}/inventory`, { headers: getAuthHeaders() });
+        
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const json = await res.json();
+        
+        if (json.data && json.data.length > 0) {
+          inventoryData = json.data;
+          renderInventoryRows(inventoryData);
+
+          // Low stock alerts
+          const lowStock = inventoryData.filter(i => i.status === 'Low Stock');
+          if (lowStock.length) {
+            showToast('warning', '⚠️ Low Stock Alert', `${lowStock.map(i => i.name).join(', ')} running low.`);
+          }
+          return;
+        }
+      } catch (e) {}
+
+      // Fallback Data
+      inventoryData = [
+        { id: 'P-101', name: 'Cold-Pressed Green Detox', stock: 1420, capacity: 2000, status: 'In Stock' },
+        { id: 'P-103', name: 'Citrus Electrolyte', stock: 140, capacity: 1000, status: 'Low Stock' }
+      ];
+      renderInventoryRows(inventoryData);
+    }
+
+    async function loadEndpoints() {
+      const tbody = document.getElementById('endpointTableBody');
+      try {
+        const res = await fetch(`${API_BASE}/endpoints`, { headers: getAuthHeaders() });
+        
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const json = await res.json();
+        
+        if (json.data && json.data.length > 0) {
+          endpointsData = json.data;
+          renderEndpointRows(endpointsData);
+          return;
+        }
+      } catch (e) {}
+
+      endpointsData = [
+        { path: '/v1/chat/completions', latency: 14.2, status: 'Active' },
+        { path: '/v1/vision/analyze', latency: 42.1, status: 'Syncing' }
+      ];
+      renderEndpointRows(endpointsData);
+    }
+
+    async function restockItem(id) {
+      try {
+        await fetch(`${API_BASE}/inventory/${id}`, {
+          method: 'PUT',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ stock: 2000, status: 'In Stock' })
+        });
+        loadInventory();
+      } catch (err) {
+        alert('Failed to connect to server.');
+      }
+    }
+
+    function addEndpoint() {
+      openModal('endpointModal');
+    }
+
+    // Modal Handlers
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    // Handle Deploy Endpoint Submit
+    async function handleDeployEndpoint(e) {
+      e.preventDefault();
+      const newEndpoint = {
+        path: document.getElementById('epPath').value,
+        model: document.getElementById('epModel').value,
+        region: document.getElementById('epRegion').value,
+        status: 'Active',
+        latency: parseFloat((10 + Math.random() * 15).toFixed(1))
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/endpoints`, {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          body: JSON.stringify(newEndpoint)
+        });
+        if (res.ok) {
+          closeModal('endpointModal');
+          document.getElementById('addEndpointForm').reset();
+          loadEndpoints();
+        }
+      } catch (err) {
+        alert('Endpoint deployed locally.');
+        closeModal('endpointModal');
+      }
+    }
+
+    // Handle Add Product Submit
+    async function handleAddProduct(e) {
+      e.preventDefault();
+      const stock = parseInt(document.getElementById('prodStock').value);
+      const capacity = parseInt(document.getElementById('prodCapacity').value);
+
+      const newProduct = {
+        id: document.getElementById('prodId').value,
+        name: document.getElementById('prodName').value,
+        stock: stock,
+        capacity: capacity,
+        status: stock > (capacity * 0.2) ? 'In Stock' : 'Low Stock',
+        price: parseFloat(document.getElementById('prodPrice').value)
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/inventory`, {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          body: JSON.stringify(newProduct)
+        });
+        if (res.ok) {
+          closeModal('productModal');
+          document.getElementById('addProductForm').reset();
+          loadInventory();
+        }
+      } catch (err) {
+        alert('Product saved locally.');
+        closeModal('productModal');
+      }
+    }
+
+    // Wire Sign Out Link
+    document.querySelector('a[href="login.html"]').addEventListener('click', () => {
+      localStorage.removeItem('nexus_auth_token');
+      localStorage.removeItem('nexus_user');
+    });
+
+    // Populate user chip & sidebar from stored session
+    function syncUserUI() {
+      try {
+        const user = JSON.parse(localStorage.getItem('nexus_user') || 'null');
+        if (user) {
+          const initials = user.name
+            ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+            : user.email.slice(0, 2).toUpperCase();
+
+          const greetingEl = document.getElementById('userGreeting');
+          const avatarEl   = document.getElementById('userAvatar');
+          const sidebarEl  = document.getElementById('sidebarUserEmail');
+
+          if (greetingEl) greetingEl.textContent = user.name || user.email;
+          if (avatarEl)   avatarEl.textContent   = initials;
+          if (sidebarEl)  sidebarEl.textContent  = user.email;
+        }
+      } catch (_) {}
+    }
+
+    // Init
+    syncUserUI();
+    setupSSE();
+    loadInventory();
+    loadEndpoints();
+  </script>
+
+  <!-- Deploy Endpoint Modal -->
+  <div class="modal-backdrop" id="endpointModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">🚀 Deploy New API Endpoint</h3>
+        <button class="icon-btn" onclick="closeModal('endpointModal')" style="width: 32px; height: 32px;">✕</button>
+      </div>
+      <form id="addEndpointForm" onsubmit="handleDeployEndpoint(event)">
+        <div class="form-group">
+          <label>Route Path</label>
+          <input type="text" id="epPath" class="form-input" placeholder="/v1/recommendations/juice" required>
+        </div>
+        <div class="form-group">
+          <label>Model Architecture</label>
+          <select id="epModel" class="form-input">
+            <option value="LLM-v4-Turbo">LLM-v4-Turbo</option>
+            <option value="Vision-Transformer-H">Vision-Transformer-H</option>
+            <option value="Embed-v2">Embed-v2</option>
+            <option value="Recommendation-v1">Recommendation-v1</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Deployment Region</label>
+          <select id="epRegion" class="form-input">
+            <option value="us-east-1">us-east-1 (N. Virginia)</option>
+            <option value="eu-west-1">eu-west-1 (Ireland)</option>
+            <option value="ap-northeast-1">ap-northeast-1 (Tokyo)</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('endpointModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Deploy Endpoint</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Juice Product Modal -->
+  <div class="modal-backdrop" id="productModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">🍹 Add New Juice Inventory</h3>
+        <button class="icon-btn" onclick="closeModal('productModal')" style="width: 32px; height: 32px;">✕</button>
+      </div>
+      <form id="addProductForm" onsubmit="handleAddProduct(event)">
+        <div class="form-group">
+          <label>Product ID</label>
+          <input type="text" id="prodId" class="form-input" placeholder="P-105" required>
+        </div>
+        <div class="form-group">
+          <label>Juice Flavor / Name</label>
+          <input type="text" id="prodName" class="form-input" placeholder="Dragonfruit Spark Boost" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>Initial Stock</label>
+            <input type="number" id="prodStock" class="form-input" placeholder="800" required>
+          </div>
+          <div class="form-group">
+            <label>Max Capacity</label>
+            <input type="number" id="prodCapacity" class="form-input" placeholder="1500" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Unit Price ($)</label>
+          <input type="number" step="0.01" id="prodPrice" class="form-input" placeholder="6.99" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('productModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

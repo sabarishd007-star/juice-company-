@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Acme Platform</title>
+  <link rel="stylesheet" href="login.css">
+  
+  <!-- Inline FOUC Prevention Script — uses shared nexus_theme key -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('nexus_theme');
+      const preferredTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', preferredTheme);
+    })();
+  </script>
+</head>
+<body>
+  <!-- Ambient Animated Background -->
+  <div class="bg-wrapper" aria-hidden="true">
+    <div class="bg-glow bg-glow-primary"></div>
+    <div class="bg-glow bg-glow-secondary"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <!-- Main Split-Screen Container -->
+  <main class="login-viewport">
+    <div class="login-split">
+      
+      <!-- Left Panel: Branding & Visual Showcase -->
+      <section class="brand-panel">
+        <div class="brand-content">
+          <a href="index.html" class="brand-logo" aria-label="Acme Home">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="36" height="36" rx="10" fill="url(#logo-grad)"/>
+              <path d="M11 25L18 11L25 25H21.5L18 17.5L14.5 25H11Z" fill="white"/>
+              <defs>
+                <linearGradient id="logo-grad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#6366F1"/>
+                  <stop offset="1" stop-color="#8B5CF6"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="brand-name">Acme Inc</span>
+          </a>
+
+          <div class="brand-hero">
+            <span class="badge">Next-Gen SaaS 2.0</span>
+            <h1 class="hero-title">Manage your workflow with absolute precision.</h1>
+            <p class="hero-sub">Experience enterprise-grade speed, real-time analytics, and automated security built for ambitious teams.</p>
+          </div>
+
+          <!-- Feature Cards / Social Proof -->
+          <div class="testimonial-card">
+            <div class="testimonial-stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <p class="testimonial-quote">“Acme transformed how our engineering team deploys infrastructure. The speed boost was instantaneous.”</p>
+            <div class="testimonial-author">
+              <span class="author-name">Alex Rivera</span>
+              <span class="author-title">VP of Engineering, VeloX</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel: Authentication Card -->
+      <section class="auth-panel">
+        <div class="auth-card">
+          
+          <!-- Card Header with Theme Toggle -->
+          <header class="auth-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h2 class="auth-title">Welcome back</h2>
+              <p class="auth-subtitle">Sign in to your account to continue</p>
+            </div>
+            <button id="themeToggle" class="btn-social" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 20px; gap: 6px;" aria-label="Toggle theme" title="Toggle theme">
+              <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+              <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <span id="themeLabel">Theme</span>
+            </button>
+          </header>
+
+          <!-- Main Auth Form (Preserves native submit logic) -->
+          <form id="login-form" class="auth-form" method="POST" action="/api/login" novalidate>
+            
+            <!-- Global / Server Error Alert Container -->
+            <div id="global-error" class="alert alert-danger" role="alert" aria-live="polite" hidden>
+              <svg class="alert-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span id="global-error-text">Invalid email or password combination.</span>
+            </div>
+
+            <!-- Social Authentication Buttons -->
+            <div class="social-auth-group">
+              <button type="button" class="btn-social" id="btn-google-auth">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                <span>Continue with Google</span>
+              </button>
+              <button type="button" class="btn-social" id="btn-github-auth">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>Continue with GitHub</span>
+              </button>
+            </div>
+
+            <div class="divider">
+              <span>OR</span>
+            </div>
+
+            <!-- Email / Username Input Group -->
+            <div class="form-group">
+              <label for="email" class="form-label">Email address</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  class="form-input" 
+                  placeholder="name@company.com" 
+                  autocomplete="email" 
+                  required 
+                  aria-describedby="email-error"
+                >
+              </div>
+              <span id="email-error" class="field-error" aria-live="polite"></span>
+            </div>
+
+            <!-- Password Input Group -->
+            <div class="form-group">
+              <div class="label-row">
+                <label for="password" class="form-label">Password</label>
+                <a href="/forgot-password" class="link-subtle">Forgot password?</a>
+              </div>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password" 
+                  class="form-input" 
+                  placeholder="••••••••••••" 
+                  autocomplete="current-password" 
+                  required 
+                  aria-describedby="password-error"
+                >
+                <button type="button" class="password-toggle" id="toggle-password" aria-label="Show password" title="Show password">
+                  <svg class="eye-icon eye-show" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="eye-icon eye-hide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <span id="password-error" class="field-error" aria-live="polite"></span>
+            </div>
+
+            <!-- Remember Me Row -->
+            <div class="form-utility-row">
+              <label class="checkbox-container">
+                <input type="checkbox" id="remember-me" name="remember" class="custom-checkbox">
+                <span class="checkbox-box" aria-hidden="true">
+                  <svg class="check-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg>
+                </span>
+                <span class="checkbox-label">Keep me signed in for 30 days</span>
+              </label>
+            </div>
+
+            <!-- Primary Submit Button -->
+            <button type="submit" id="btn-submit" class="btn-primary">
+              <span class="btn-text">Sign In to Dashboard</span>
+              <span class="btn-loader" aria-hidden="true">
+                <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2 a10 10 0 0 1 10 10" stroke-linecap="round"/></svg>
+              </span>
+            </button>
+
+          </form>
+
+          <!-- Card Footer -->
+          <footer class="auth-footer">
+            <p>Don't have an account? <a href="/signup" class="link-primary">Create an account</a></p>
+          </footer>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>
