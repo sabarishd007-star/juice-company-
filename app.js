@@ -42,7 +42,7 @@ class AntiGravityApp {
     this.brandData = {
       classic: {
         title: "Coca-Cola",
-        tag: "01 / 11 Product",
+        tag: "01 / 07 Product",
         edition: "Original Taste",
         subtitle: "Classic Sparkling Cola Refreshment",
         desc: "The world's most iconic sparkling soft drink. Crafted with secret natural flavors to awaken your senses with its crisp, uplifting effervescence.",
@@ -62,31 +62,9 @@ class AntiGravityApp {
         roughness: 0.22,
         exposure: 1.25
       },
-      diet: {
-        title: "Diet Coke",
-        tag: "01 / 11 Product",
-        edition: "Silver Frost Edition",
-        subtitle: "Crisp & Light • Zero Sugar • Bold Refreshment",
-        desc: "The legendary zero-calorie, zero-sugar soft drink. Clad in brushed aluminum and ice-cold condensation, delivering that unmistakable light crisp sensation.",
-        volume: "355 ml",
-        calories: "0 kcal",
-        serving: "2°C Ice Cold",
-        sugar: "0g Sugar",
-        colors: {
-          inner: "#808a94",
-          mid: "#1d2328",
-          outer: "#0b0d0f",
-          accent: "#d1121b",
-          glow: "rgba(209, 18, 27, 0.35)",
-          text: "#ff7075"
-        },
-        metallic: 0.94,
-        roughness: 0.16,
-        exposure: 1.35
-      },
       fanta: {
         title: "Fanta Orange",
-        tag: "02 / 11 Product",
+        tag: "02 / 07 Product",
         edition: "Orange Sparkling",
         subtitle: "Bright • Bubbly • Bold Orange Fizz",
         desc: "Bright, bubbly, and instantly refreshing. Packed with bold fruity orange flavor and vibrant fizz.",
@@ -108,7 +86,7 @@ class AntiGravityApp {
       },
       sprite: {
         title: "Sprite",
-        tag: "03 / 11 Product",
+        tag: "03 / 07 Product",
         edition: "Lemon-Lime Sparkling",
         subtitle: "Crisp • Clean • Intense Citrus Fizz",
         desc: "Crisp, clean, and intensely refreshing. Blended with real lemon and lime flavors for an ice-cold burst of electrifying fizz.",
@@ -130,7 +108,7 @@ class AntiGravityApp {
       },
       maaza: {
         title: "Maaza",
-        tag: "04 / 11 Product",
+        tag: "04 / 07 Product",
         edition: "Alphonso Mango Indulgence",
         subtitle: "Rich • Thick • Authentic Tropical Mango",
         desc: "Rich, thick, and bursting with real Alphonso mango pulp. The ultimate authentic tropical mango indulgence in every drop.",
@@ -150,53 +128,9 @@ class AntiGravityApp {
         roughness: 0.32,
         exposure: 1.3
       },
-      slice: {
-        title: "Slice",
-        tag: "05 / 11 Product",
-        edition: "Thick Mango Drink",
-        subtitle: "Velvety • Golden • Hand-Picked Nectar",
-        desc: "Indulge in the thick, luscious taste of hand-picked Neelam & Alphonso mangoes for an unforgettably rich fruit experience.",
-        volume: "250 ml",
-        calories: "135 kcal",
-        serving: "Juicy Nectar",
-        sugar: "Rich Pulp",
-        colors: {
-          inner: "#ff8800",
-          mid: "#993d00",
-          outer: "#260f00",
-          accent: "#ffd000",
-          glow: "rgba(255, 136, 0, 0.55)",
-          text: "#ffd000"
-        },
-        metallic: 0.60,
-        roughness: 0.25,
-        exposure: 1.3
-      },
-      frooti: {
-        title: "Frooti",
-        tag: "06 / 11 Product",
-        edition: "Fresh Mango Drink",
-        subtitle: "Juicy • Fun • Energetic Mango Punch",
-        desc: "India’s favorite mango drink, offering a juicy, fun, and energetic mango punch packed with real mango pulp.",
-        volume: "200 ml",
-        calories: "110 kcal",
-        serving: "Mango Nectar",
-        sugar: "Fresh Pulp",
-        colors: {
-          inner: "#ffd700",
-          mid: "#cc8800",
-          outer: "#1e1300",
-          accent: "#ffea00",
-          glow: "rgba(255, 215, 0, 0.55)",
-          text: "#ffea00"
-        },
-        metallic: 0.50,
-        roughness: 0.35,
-        exposure: 1.3
-      },
       appyfizz: {
         title: "Appy Fizz",
-        tag: "07 / 11 Product",
+        tag: "05 / 07 Product",
         edition: "Sparkling Apple Drink",
         subtitle: "Crisp • Bubbly • Sleek Midnight Apple",
         desc: "The cool drink with a crisp bite. A bubbly, sparkling real apple juice drink that delivers a sleek, refreshing sensation.",
@@ -216,53 +150,9 @@ class AntiGravityApp {
         roughness: 0.15,
         exposure: 1.35
       },
-      tropicana: {
-        title: "Tropicana",
-        tag: "08 / 11 Product",
-        edition: "100% Pure Orange",
-        subtitle: "Sun-Ripened • Pure Citrus • Natural Vitamin C",
-        desc: "100% pure orange juice crafted with no added sugar or preservatives. Packed with natural Vitamin C for an invigorating start.",
-        volume: "250 ml",
-        calories: "110 kcal",
-        serving: "100% Juice",
-        sugar: "Zero Added",
-        colors: {
-          inner: "#ff5500",
-          mid: "#992200",
-          outer: "#1c0700",
-          accent: "#33cc55",
-          glow: "rgba(255, 85, 0, 0.55)",
-          text: "#33cc55"
-        },
-        metallic: 0.60,
-        roughness: 0.28,
-        exposure: 1.3
-      },
-      real: {
-        title: "Réal Mixed Fruit",
-        tag: "09 / 11 Product",
-        edition: "Wholesome 9 Fruits",
-        subtitle: "Multi-Fruit • Rich Blend • Whole Family Goodness",
-        desc: "A delicious blend of 9 rich fruits in every pack. Crafted to provide whole family nutrition and wholesome fruit goodness.",
-        volume: "200 ml",
-        calories: "115 kcal",
-        serving: "9 Fruits Blend",
-        sugar: "Natural Nectar",
-        colors: {
-          inner: "#d62828",
-          mid: "#6a040f",
-          outer: "#1e0005",
-          accent: "#f77f00",
-          glow: "rgba(214, 40, 40, 0.55)",
-          text: "#f77f00"
-        },
-        metallic: 0.65,
-        roughness: 0.24,
-        exposure: 1.3
-      },
       sting: {
         title: "Sting Energy",
-        tag: "10 / 11 Product",
+        tag: "06 / 07 Product",
         edition: "Electrifying Energy Surge",
         subtitle: "Intense • High Energy • Caffeine & Taurine",
         desc: "Electrify your senses with an intense burst of energy, caffeine, and taurine packed into a red berry formulation.",
@@ -284,7 +174,7 @@ class AntiGravityApp {
       },
       monster: {
         title: "Monster Ultra",
-        tag: "11 / 11 Product",
+        tag: "07 / 07 Product",
         edition: "Ultra White Zero Sugar",
         subtitle: "Zero Sugar • Light Crisp Citrus • Unleashed Focus",
         desc: "Zero sugar, light crisp citrus taste, and unleashed energy. Engineered for peak athletic performance and maximum focus.",
@@ -415,8 +305,8 @@ class AntiGravityApp {
     document.querySelectorAll('.catalog-item').forEach(item => {
       item.addEventListener('click', () => {
         const brand = item.dataset.brand;
-        if (brand === 'coke') {
-          this.applyBrandVariant('diet');
+        if (brand === 'coke' || brand === 'classic') {
+          this.applyBrandVariant('classic');
           this.closeCatalogModal();
         } else if (brand === 'fanta') {
           this.applyBrandVariant('fanta');
@@ -424,28 +314,16 @@ class AntiGravityApp {
         } else if (brand === 'sprite') {
           this.applyBrandVariant('sprite');
           this.closeCatalogModal();
-        } else if (brand === 'maaza' || brand === 'drpepper') {
+        } else if (brand === 'maaza') {
           this.applyBrandVariant('maaza');
           this.closeCatalogModal();
-        } else if (brand === 'slice' || brand === 'mountaindew') {
-          this.applyBrandVariant('slice');
-          this.closeCatalogModal();
-        } else if (brand === 'frooti' || brand === 'monster') {
-          this.applyBrandVariant('frooti');
-          this.closeCatalogModal();
-        } else if (brand === 'appyfizz' || brand === 'redbull') {
+        } else if (brand === 'appyfizz') {
           this.applyBrandVariant('appyfizz');
           this.closeCatalogModal();
-        } else if (brand === 'tropicana' || brand === 'pepsi') {
-          this.applyBrandVariant('tropicana');
-          this.closeCatalogModal();
-        } else if (brand === 'real' || brand === 'sevenup') {
-          this.applyBrandVariant('real');
-          this.closeCatalogModal();
-        } else if (brand === 'sting' || brand === 'sanpellegrino') {
+        } else if (brand === 'sting') {
           this.applyBrandVariant('sting');
           this.closeCatalogModal();
-        } else if (brand === 'monster' || brand === 'schweppes') {
+        } else if (brand === 'monster') {
           this.applyBrandVariant('monster');
           this.closeCatalogModal();
         } else {
@@ -469,71 +347,12 @@ class AntiGravityApp {
       if (this.modelViewer.getAttribute('src') !== 'assets/coca_cola.glb') {
         this.modelViewer.src = 'assets/coca_cola.glb';
       }
-    } else if (variantKey === 'diet') {
-      this.btnDiet.classList.add('active');
+    } else {
       this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/diet_coke.glb') {
-        this.modelViewer.src = 'assets/diet_coke.glb';
-      }
-    } else if (variantKey === 'fanta') {
       this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'sprite') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'maaza') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'slice') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'frooti') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'appyfizz') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'tropicana') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'real') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'sting') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/deit_soda2.glb') {
-        this.modelViewer.src = 'assets/deit_soda2.glb';
-      }
-    } else if (variantKey === 'monster') {
-      this.btnDiet.classList.remove('active');
-      this.btnClassic.classList.remove('active');
-      if (this.modelViewer.getAttribute('src') !== 'assets/diet_coke.glb') {
-        this.modelViewer.src = 'assets/diet_coke.glb';
+      const targetSrc = 'assets/deit_soda2.glb';
+      if (this.modelViewer.getAttribute('src') !== targetSrc) {
+        this.modelViewer.src = targetSrc;
       }
     }
 
@@ -546,12 +365,12 @@ class AntiGravityApp {
     this.servingEl.textContent = data.serving;
     this.sugarEl.textContent = data.sugar;
     document.querySelector('[data-spec-label="flavor"]').textContent =
-      (variantKey === 'monster') ? 'Formula' : (variantKey === 'sting') ? 'Active' : (variantKey === 'real') ? 'Blend' : (variantKey === 'tropicana') ? 'Purity' : (variantKey === 'appyfizz' || variantKey === 'frooti') ? 'Type' : (variantKey === 'maaza' || variantKey === 'slice') ? 'Blend' : (variantKey === 'fanta' || variantKey === 'sprite') ? 'Flavor' : 'Serving';
+      (variantKey === 'monster') ? 'Formula' : (variantKey === 'sting') ? 'Active' : (variantKey === 'appyfizz') ? 'Type' : (variantKey === 'maaza') ? 'Blend' : (variantKey === 'fanta' || variantKey === 'sprite') ? 'Flavor' : 'Serving';
     document.querySelector('[data-spec-label="sparkle"]').textContent =
-      (variantKey === 'monster') ? 'Performance' : (variantKey === 'sting') ? 'Surge' : (variantKey === 'real') ? 'Fruit Base' : (variantKey === 'tropicana') ? 'Sugars' : (variantKey === 'appyfizz') ? 'Carbonation' : (variantKey === 'frooti') ? 'Nectar' : (variantKey === 'maaza' || variantKey === 'slice') ? 'Texture' : (variantKey === 'fanta' || variantKey === 'sprite') ? 'Fizziness' : 'Sugar';
+      (variantKey === 'monster') ? 'Performance' : (variantKey === 'sting') ? 'Surge' : (variantKey === 'appyfizz') ? 'Carbonation' : (variantKey === 'maaza') ? 'Texture' : (variantKey === 'fanta' || variantKey === 'sprite') ? 'Fizziness' : 'Sugar';
     document.querySelector('.brand-edition-pill').textContent = data.edition;
     document.querySelector('.brand-logo-text').textContent =
-      variantKey === 'fanta' ? 'Fanta' : variantKey === 'sprite' ? 'Sprite' : variantKey === 'maaza' ? 'Maaza' : variantKey === 'slice' ? 'Slice' : variantKey === 'frooti' ? 'Frooti' : variantKey === 'appyfizz' ? 'Appy Fizz' : variantKey === 'tropicana' ? 'Tropicana' : variantKey === 'real' ? 'Réal' : variantKey === 'sting' ? 'Sting' : variantKey === 'monster' ? 'Monster' : 'Coca-Cola';
+      variantKey === 'fanta' ? 'Fanta' : variantKey === 'sprite' ? 'Sprite' : variantKey === 'maaza' ? 'Maaza' : variantKey === 'appyfizz' ? 'Appy Fizz' : variantKey === 'sting' ? 'Sting' : variantKey === 'monster' ? 'Monster' : 'Coca-Cola';
     document.querySelector('.tag-step').lastChild.textContent = ` ${data.tag}`;
     document.title = `${data.title} | Anti-Gravity 3D Showcase Experience`;
 
@@ -592,15 +411,10 @@ class AntiGravityApp {
     const slices = document.querySelectorAll('.citrus-slice');
     const emojiSets = {
       classic:    ['🥤', '❄️', '🫧'],
-      diet:       ['🥤', '❄️', '🫧'],
       fanta:      ['🍊', '🍊', '🍊'],
       sprite:     ['🍋', '🍈', '🫧'],
       maaza:      ['🥭', '🍃', '🥭'],
-      slice:      ['🥭', '✨', '🥭'],
-      frooti:     ['🥭', '🍃', '🥭'],
       appyfizz:   ['🍎', '🍏', '✨'],
-      tropicana:  ['🍊', '🍃', '💦'],
-      real:       ['🍓', '🍊', '🍎'],
       sting:      ['⚡', '💥', '🍓'],
       monster:    ['❄️', '⚡', '💎']
     };
@@ -618,16 +432,11 @@ class AntiGravityApp {
     if (!btnEl) return;
     const labels = {
       classic:    'Next: Product 02 Fanta Orange',
-      diet:       'Next: Product 02 Fanta Orange',
       fanta:      'Next: Product 03 Sprite Lemon-Lime',
       sprite:     'Next: Product 04 Maaza — Mango',
-      maaza:      'Next: Product 05 Slice — Mango',
-      slice:      'Next: Product 06 Frooti — Mango',
-      frooti:     'Next: Product 07 Appy Fizz — Apple',
-      appyfizz:   'Next: Product 08 Tropicana — Orange',
-      tropicana:  'Next: Product 09 Réal — Mixed Fruit',
-      real:       'Next: Product 10 Sting — Energy',
-      sting:      'Next: Product 11 Monster Ultra White',
+      maaza:      'Next: Product 05 Appy Fizz — Apple',
+      appyfizz:   'Next: Product 06 Sting Energy',
+      sting:      'Next: Product 07 Monster Ultra White',
       monster:    '🔄 Restart Showcase: Product 01 Coca-Cola'
     };
     const span = btnEl.querySelector('span');

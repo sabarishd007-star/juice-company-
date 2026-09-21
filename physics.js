@@ -29,7 +29,7 @@ class AntiGravityPhysicsEngine {
     this.interactionPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
     this.mouseWorldPos = new THREE.Vector3(-9999, -9999, 0);
 
-    this.theme = 'diet';
+    this.theme = 'classic';
     this.themes = {
       classic: {
         bubbleColor:   0xff4455,
@@ -39,15 +39,6 @@ class AntiGravityPhysicsEngine {
         dropletColor:  0xff9999,
         envColor:      0xe61c24,
         lightColor:    0xff4d52
-      },
-      diet: {
-        bubbleColor:   0xaaccee,
-        bubbleEmissive:0x3366aa,
-        iceColor:      0xddeeff,
-        iceEmissive:   0x112244,
-        dropletColor:  0xddeeff,
-        envColor:      0x808a94,
-        lightColor:    0xffffff
       },
       fanta: {
         bubbleColor:   0xffc14d,
@@ -76,24 +67,6 @@ class AntiGravityPhysicsEngine {
         envColor:      0xff9900,
         lightColor:    0xffea00
       },
-      slice: {
-        bubbleColor:   0xffd000,
-        bubbleEmissive:0x993d00,
-        iceColor:      0xfff0d0,
-        iceEmissive:   0x4d1a00,
-        dropletColor:  0xff8800,
-        envColor:      0xff8800,
-        lightColor:    0xffd000
-      },
-      frooti: {
-        bubbleColor:   0xffea00,
-        bubbleEmissive:0xcc8800,
-        iceColor:      0xfffae0,
-        iceEmissive:   0x332200,
-        dropletColor:  0xffd700,
-        envColor:      0xffd700,
-        lightColor:    0xffea00
-      },
       appyfizz: {
         bubbleColor:   0xff3366,
         bubbleEmissive:0x990026,
@@ -102,24 +75,6 @@ class AntiGravityPhysicsEngine {
         dropletColor:  0xff3366,
         envColor:      0x990026,
         lightColor:    0xff3366
-      },
-      tropicana: {
-        bubbleColor:   0x33cc55,
-        bubbleEmissive:0x00802b,
-        iceColor:      0xfff0e6,
-        iceEmissive:   0x4d1a00,
-        dropletColor:  0xff5500,
-        envColor:      0xff5500,
-        lightColor:    0x33cc55
-      },
-      real: {
-        bubbleColor:   0xf77f00,
-        bubbleEmissive:0xd62828,
-        iceColor:      0xffe6eb,
-        iceEmissive:   0x6a040f,
-        dropletColor:  0xd62828,
-        envColor:      0xd62828,
-        lightColor:    0xf77f00
       },
       sting: {
         bubbleColor:   0x00ffff,

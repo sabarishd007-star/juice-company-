@@ -581,6 +581,9 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #video-bg-container.active {
@@ -590,7 +593,8 @@
         #product-bg-video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.45));
         }
 
         .video-vignette {
@@ -688,7 +692,7 @@
                     <p>High-performance anti-gravity canvas, dynamic ambient lighting, and interactive 3D customization engineered for modern product showcases.</p>
                     <div class="hero-cta">
                         <button class="btn-primary" onclick="navigateTo('login-view')">Get Started Free →</button>
-                        <button class="btn-secondary" onclick="navigateTo('login-view')">Explore 11 Brands</button>
+                        <button class="btn-secondary" onclick="navigateTo('login-view')">Explore 7 Brands</button>
                     </div>
                 </div>
 
@@ -745,7 +749,7 @@
         <section class="stats-banner" id="stats">
             <div class="container stats-grid">
                 <div class="stat-item">
-                    <strong>11+</strong>
+                    <strong>7+</strong>
                     <span>Iconic Brands</span>
                 </div>
                 <div class="stat-item">
@@ -849,24 +853,24 @@
                 <div id="sidebar-info" style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <span class="badge" id="prod-number">11 / 11 Product</span>
+                            <span class="badge" id="prod-number">01 / 07 Product</span>
                             <button class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="toggleCustomizer()">⚙️ Customize</button>
                         </div>
-                        <h1 style="font-size: 2.8rem; margin: 0.6rem 0;" id="prod-name">Monster Ultra</h1>
-                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;" id="prod-desc">Zero sugar, light crisp citrus taste, and unleashed energy. Engineered for peak athletic performance and maximum focus.</p>
+                        <h1 style="font-size: 2.8rem; margin: 0.6rem 0;" id="prod-name">Coca-Cola</h1>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;" id="prod-desc">The original classic cola taste enjoyed worldwide.</p>
 
                         <div style="display: flex; gap: 1.5rem; margin: 2rem 0;">
                             <div>
                                 <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Volume</span>
-                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-vol">500ml</strong>
+                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-vol">330ml</strong>
                             </div>
                             <div>
                                 <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Calories</span>
-                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-cal">0 kcal</strong>
+                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-cal">139 kcal</strong>
                             </div>
                             <div>
                                 <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Formula</span>
-                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-type">Taurine + B-Vitamins</strong>
+                                <strong style="font-size: 1.2rem; color: var(--primary-cyan);" id="spec-type">Classic Soda</strong>
                             </div>
                         </div>
                     </div>
@@ -913,50 +917,82 @@
 
     <!-- Application Scripting -->
     <script>
-        // Data Preservation for all 11 Beverage Products
+        // Data Preservation for 7 Curated Beverage Products
         const products = [
-            { id: 1, name: "Coca-Cola", tag: "01 / 11 Product", desc: "The original classic cola taste enjoyed worldwide.", vol: "330ml", cal: "139 kcal", type: "Classic Soda", accent: "#ff0000", bgInner: "#d00000", bgMid: "#500000", bgOuter: "#100000", icons: ["🥤", "🧊", "🔴", "✨"] },
-            { id: 2, name: "Diet Coke", tag: "02 / 11 Product", desc: "Crisp, refreshing taste with zero sugar and zero calories.", vol: "330ml", cal: "0 kcal", type: "Zero Sugar", accent: "#e6e6e6", bgInner: "#8a8a8a", bgMid: "#333333", bgOuter: "#0f0f0f", icons: ["⚪", "🧊", "⚡", "✨"] },
-            { id: 3, name: "Sprite", tag: "03 / 11 Product", desc: "Crisp, clean lemon-lime taste that instantly quenches thirst.", vol: "330ml", cal: "140 kcal", type: "Lemon-Lime", accent: "#00ff66", bgInner: "#00a843", bgMid: "#004d1f", bgOuter: "#001a0a", icons: ["🍋", "🧊", "🍃", "💧"] },
-            { id: 4, name: "Fanta Orange", tag: "04 / 11 Product", desc: "Bright, bubbly, and bursting with vibrant citrus orange flavor.", vol: "330ml", cal: "160 kcal", type: "Orange Soda", accent: "#ff7700", bgInner: "#e65c00", bgMid: "#662900", bgOuter: "#1a0a00", icons: ["🍊", "🧊", "💥", "✨"] },
-            { id: 5, name: "Slice Mango", tag: "05 / 11 Product", desc: "Rich, luscious mango drink crafted from thick juicy mango pulp.", vol: "250ml", cal: "120 kcal", type: "Mango Drink", accent: "#ffbb00", bgInner: "#cc9600", bgMid: "#553e00", bgOuter: "#1a1300", icons: ["🥭", "🧊", "🍃", "💧"] },
-            { id: 6, name: "Frooti", tag: "06 / 11 Product", desc: "India’s favorite mango drink offering a fun, juicy mango punch.", vol: "200ml", cal: "110 kcal", type: "Mango Nectar", accent: "#ffea00", bgInner: "#ffd700", bgMid: "#cc8800", bgOuter: "#1e1300", icons: ["🥭", "🧊", "🍃", "🥭"] },
-            { id: 7, name: "Appy Fizz", tag: "07 / 11 Product", desc: "Bubbly, sparkling real apple juice drink with a crisp bite.", vol: "250ml", cal: "120 kcal", type: "Sparkling Apple", accent: "#ff3366", bgInner: "#990026", bgMid: "#4d0013", bgOuter: "#110004", icons: ["🍎", "🧊", "🍏", "✨"] },
-            { id: 8, name: "Tropicana", tag: "08 / 11 Product", desc: "100% pure orange juice crafted with no added sugar or preservatives.", vol: "250ml", cal: "110 kcal", type: "100% Juice", accent: "#33cc55", bgInner: "#ff5500", bgMid: "#992200", bgOuter: "#1c0700", icons: ["🍊", "🧊", "🍃", "💦"] },
-            { id: 9, name: "Réal Mixed Fruit", tag: "09 / 11 Product", desc: "Delicious blend of 9 rich fruits providing whole family nutrition.", vol: "200ml", cal: "115 kcal", type: "9 Fruits Blend", accent: "#f77f00", bgInner: "#d62828", bgMid: "#6a040f", bgOuter: "#1e0005", icons: ["🍓", "🧊", "🍊", "🍎"] },
-            { id: 10, name: "Sting Energy", tag: "10 / 11 Product", desc: "Electrifying burst of energy, caffeine, and taurine in berry flavor.", vol: "250ml", cal: "140 kcal", type: "Energy Drink", accent: "#00ffff", bgInner: "#ff0055", bgMid: "#880022", bgOuter: "#1a0005", icons: ["⚡", "🧊", "💥", "🍓"] },
-            { id: 11, name: "Monster Ultra", tag: "11 / 11 Product", desc: "Zero sugar, light crisp citrus taste, and unleashed performance energy.", vol: "500ml", cal: "0 kcal", type: "Taurine + B-Vitamins", accent: "#00f3ff", bgInner: "#2e3b4e", bgMid: "#121824", bgOuter: "#05080f", icons: ["❄️", "⚡", "🧊", "💎"] }
+            { id: 1, name: "Coca-Cola", tag: "01 / 07 Product", desc: "The original classic cola taste enjoyed worldwide.", vol: "330ml", cal: "139 kcal", type: "Classic Soda", accent: "#ff0000", bgInner: "#d00000", bgMid: "#500000", bgOuter: "#100000", icons: ["🥤", "🧊", "🔴", "✨"] },
+            { id: 2, name: "Sprite", tag: "02 / 07 Product", desc: "Crisp, clean lemon-lime taste that instantly quenches thirst.", vol: "330ml", cal: "140 kcal", type: "Lemon-Lime", accent: "#00ff66", bgInner: "#00a843", bgMid: "#004d1f", bgOuter: "#001a0a", icons: ["🍋", "🧊", "🍃", "💧"] },
+            { id: 3, name: "Fanta Orange", tag: "03 / 07 Product", desc: "Bright, bubbly, and bursting with vibrant citrus orange flavor.", vol: "330ml", cal: "160 kcal", type: "Orange Soda", accent: "#ff7700", bgInner: "#e65c00", bgMid: "#662900", bgOuter: "#1a0a00", icons: ["🍊", "🧊", "💥", "✨"] },
+            { id: 4, name: "Maaza", tag: "04 / 07 Product", desc: "Rich, luscious mango drink crafted from thick juicy Alphonso mango pulp.", vol: "250ml", cal: "128 kcal", type: "Mango Drink", accent: "#ffbb00", bgInner: "#cc9600", bgMid: "#553e00", bgOuter: "#1a1300", icons: ["🥭", "🧊", "🍃", "💧"] },
+            { id: 5, name: "Appy Fizz", tag: "05 / 07 Product", desc: "Bubbly, sparkling real apple juice drink with a crisp bite.", vol: "250ml", cal: "120 kcal", type: "Sparkling Apple", accent: "#ff3366", bgInner: "#990026", bgMid: "#4d0013", bgOuter: "#110004", icons: ["🍎", "🧊", "🍏", "✨"] },
+            { id: 6, name: "Sting Energy", tag: "06 / 07 Product", desc: "Electrifying burst of energy, caffeine, and taurine in berry flavor.", vol: "250ml", cal: "140 kcal", type: "Energy Drink", accent: "#00ffff", bgInner: "#ff0055", bgMid: "#880022", bgOuter: "#1a0005", icons: ["⚡", "🧊", "💥", "🍓"] },
+            { id: 7, name: "Monster Ultra", tag: "07 / 07 Product", desc: "Zero sugar, light crisp citrus taste, and unleashed performance energy.", vol: "500ml", cal: "0 kcal", type: "Taurine + B-Vitamins", accent: "#00f3ff", bgInner: "#2e3b4e", bgMid: "#121824", bgOuter: "#05080f", icons: ["❄️", "⚡", "🧊", "💎"] }
         ];
 
-        // Dynamic Product Assets Configuration (Video & 3D Model mapping)
+        // Dynamic Product Assets Configuration (All 7 Featured Products with Videos)
         const productAssets = {
             "Coca-Cola": {
                 type: "video",
                 bgVideoUrl: "./assets/coca-cola-splash.mp4",
-                bgGradient: "linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0c4a6e 100%)",
+                objectFit: "cover",
+                bgGradient: "radial-gradient(circle at center, #d00000 0%, #500000 50%, #100000 100%)",
                 modelUrl: "assets/coca_cola.glb",
                 labelTextureUrl: "assets/classic_coke_texture.png",
                 canColor: "#F40000"
             },
-            "Diet Coke": {
-                type: "color",
-                bgVideoUrl: "",
-                bgGradient: "linear-gradient(135deg, #475569 0%, #1e293b 50%, #0f172a 100%)",
-                modelUrl: "assets/diet_coke.glb",
-                labelTextureUrl: "assets/diet_coke_texture.png",
-                canColor: "#e6e6e6"
+            "Sprite": {
+                type: "video",
+                bgVideoUrl: "./assets/Lemon_lime_beverage_product_assembly_20260921092144.mp4",
+                objectFit: "contain",
+                bgGradient: "radial-gradient(circle at center, #00a843 0%, #004d1f 50%, #001a0a 100%)",
+                modelUrl: "assets/deit_soda2.glb",
+                canColor: "#00b140"
+            },
+            "Fanta Orange": {
+                type: "video",
+                bgVideoUrl: "./assets/Orange_soda_bottle_assembling_20260921102344.mp4",
+                objectFit: "contain",
+                bgGradient: "radial-gradient(circle at center, #e65c00 0%, #662900 50%, #1a0a00 100%)",
+                modelUrl: "assets/deit_soda2.glb",
+                labelTextureUrl: "assets/fanta_texture.png",
+                canColor: "#ff7700"
+            },
+            "Maaza": {
+                type: "video",
+                bgVideoUrl: "./assets/Maaza_bottle_assembling_with_mango_20260921093355.mp4",
+                objectFit: "contain",
+                bgGradient: "radial-gradient(circle at center, #cc9600 0%, #553e00 50%, #1a1300 100%)",
+                modelUrl: "assets/deit_soda2.glb",
+                canColor: "#ffbb00"
+            },
+
+            "Appy Fizz": {
+                type: "video",
+                bgVideoUrl: "./assets/Appy_Fizz_bottle_assembly_animation_20260921101533.mp4",
+                objectFit: "contain",
+                bgGradient: "radial-gradient(circle at center, #990026 0%, #4d0013 50%, #110004 100%)",
+                modelUrl: "assets/deit_soda2.glb",
+                canColor: "#ff3366"
+            },
+            "Sting Energy": {
+                type: "video",
+                bgVideoUrl: "./assets/Sting_energy_drink_product_assembly_20260921100743.mp4",
+                objectFit: "contain",
+                bgGradient: "radial-gradient(circle at center, #ff0055 0%, #880022 50%, #1a0005 100%)",
+                modelUrl: "assets/deit_soda2.glb",
+                canColor: "#00ffff"
             },
             "Monster Ultra": {
-                type: "color",
-                bgVideoUrl: "",
-                bgGradient: "linear-gradient(135deg, #064e3b 0%, #022c22 50%, #0f172a 100%)",
+                type: "video",
+                bgVideoUrl: "./assets/Monster_energy_can_assembly_20260921094412.mp4",
+                objectFit: "contain",
+                bgGradient: "radial-gradient(circle at center, #2e3b4e 0%, #121824 50%, #05080f 100%)",
                 modelUrl: "https://api.getlayers.ai/storage/v1/object/public/public/assets/soda-14ff8a788d/deit_soda2.glb",
-                labelTextureUrl: "",
-                canColor: "#2E8B57"
+                canColor: "#00f3ff"
             }
         };
 
-        let currentIndex = 10;
+        let currentIndex = 0;
+        let _lastLoadedVideoUrl = null; // Track last video to avoid redundant reloads
 
         // View Router
         function navigateTo(viewId) {
@@ -1005,16 +1041,19 @@
             const customizeBtn = document.querySelector('button[onclick="toggleCustomizer()"]');
 
             if (asset && asset.type === "video" && asset.bgVideoUrl) {
-                const currentSrc = videoElement.currentSrc || videoElement.src || '';
-                const cleanTarget = asset.bgVideoUrl.replace(/^\.\//, '');
-                if (!currentSrc.includes(cleanTarget)) {
+                // Track last loaded URL ourselves — videoElement.currentSrc returns a
+                // fully-resolved absolute URL which breaks relative-path comparisons.
+                if (_lastLoadedVideoUrl !== asset.bgVideoUrl) {
+                    _lastLoadedVideoUrl = asset.bgVideoUrl;
                     videoElement.src = asset.bgVideoUrl;
                     videoElement.load();
                 }
+                videoElement.style.objectFit = asset.objectFit || 'contain';
+                videoElement.currentTime = 0;
                 videoElement.muted = true;
                 videoElement.play().catch(e => console.log("Autoplay handled/muted:", e));
                 videoContainer.classList.add('active');
-                dashboardView.style.background = asset.bgGradient || '#0284c7';
+                dashboardView.style.background = asset.bgGradient || `radial-gradient(circle at center, ${prod.bgInner} 0%, ${prod.bgMid} 50%, ${prod.bgOuter} 100%)`;
 
                 // Only video should play: hide 3D can, floating particles, and customize button
                 if (model) model.style.display = 'none';
