@@ -5,7 +5,12 @@
   "scripts": {
     "seed": "npm --prefix juice-company-backend run seed",
     "server": "npm --prefix juice-company-backend run start",
-    "dev": "concurrently \"npm run server\" \"http-server . -p 3000 --cors\""
+    "dev": "concurrently \"npm run server\" \"http-server . -p 3000 --cors\"",
+    "dev:carbon": "npm --prefix juice-company-backend run dev:carbon",
+    "start:carbon": "npm --prefix juice-company-backend run start:carbon",
+    "build:carbon": "npm --prefix juice-company-backend run build:carbon",
+    "db:push": "npm --prefix juice-company-backend run db:push",
+    "db:generate": "npm --prefix juice-company-backend run db:generate"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

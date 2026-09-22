@@ -12,3 +12,6 @@ database.sqlite
 .DS_Store
 Thumbs.db
 *.log
+
+# Build artifacts
+dist/
